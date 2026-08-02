@@ -2,10 +2,32 @@
 [versions]
 guava = "33.0.0-jre"
 junit-jupiter = "5.10.2"
+ktor = "3.0.3"
+graphql-kotlin = "9.2.1"
+exposed = "0.57.0"
+hikaricp = "5.1.0"
+postgresql = "42.7.4"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 
+# Ktor
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
+
+# GraphQL Kotlin Ktor Server
+graphql-kotlin-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "graphql-kotlin" }
+
+# Exposed ORM & Database Connection
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
 [plugins]
-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.0" }
