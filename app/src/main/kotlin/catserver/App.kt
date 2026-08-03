@@ -15,18 +15,53 @@ import com.expediagroup.graphql.server.operations.Query
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class HelloQuery : Query {
     fun hello(): String = "Hello World!"
 }
+
+class FeedMetaQuery : Query {
+    fun feedMeta(): List<FeedMeta> {
+        return transaction {
+            FeedMetaTable.selectAll().map { row ->
+                FeedMeta(
+                    feed_key = row[FeedMetaTable.feedKey],
+                    feed_url = row[FeedMetaTable.feedUrl],
+                    last_updated = row[FeedMetaTable.lastUpdated]?.toString(),
+                    last_successful_refresh = row[FeedMetaTable.lastSuccessfulRefresh]?.toString()
+                )
+            }
+        }
+    }
+}
+
+object FeedMetaTable : Table("feed_meta") {
+    val feedKey = varchar("feed_key", 255)
+    val feedUrl = varchar("feed_url", 1024)
+    val lastUpdated = timestamp("last_updated").nullable()
+    val lastSuccessfulRefresh = timestamp("last_successful_refresh").nullable()
+
+    override val primaryKey = PrimaryKey(feedKey)
+}
+
+data class FeedMeta(
+    val feed_key: String,
+    val feed_url: String,
+    val last_updated: String?,
+    val last_successful_refresh: String?
+)
 
 fun initDatabase() {
     try {
         val config = HikariConfig().apply {
             jdbcUrl = System.getenv("JDBC_URL") ?: "jdbc:postgresql://localhost:5432/catracker"
             driverClassName = "org.postgresql.Driver"
-            username = System.getenv("DB_USER") ?: "postgres"
-            password = System.getenv("DB_PASSWORD") ?: "postgres"
+            username = System.getenv("DB_USER") ?: "bobl"
+            password = System.getenv("DB_PASSWORD") ?: ""
             maximumPoolSize = 10
             initializationFailTimeout = 1000 // prevent hanging if PostgreSQL is unavailable
         }
@@ -49,7 +84,8 @@ fun Application.module() {
         schema {
             packages = listOf("catserver")
             queries = listOf(
-                HelloQuery()
+                HelloQuery(),
+                FeedMetaQuery()
             )
         }
     }

@@ -48,6 +48,22 @@ class AppTest {
     }
 
     @Test
+    fun testGraphQLSDLRouteForFeedMeta() = testApplication {
+        application {
+            module()
+        }
+        val response = client.get("/sdl")
+        assertEquals(HttpStatusCode.OK, response.status)
+        val body = response.bodyAsText()
+        assertTrue(body.contains("feedMeta: [FeedMeta!]!"), "SDL should contain feedMeta query")
+        assertTrue(body.contains("type FeedMeta"), "SDL should contain FeedMeta type")
+        assertTrue(body.contains("feed_key: String!"), "SDL should contain feed_key")
+        assertTrue(body.contains("feed_url: String!"), "SDL should contain feed_url")
+        assertTrue(body.contains("last_updated: String"), "SDL should contain last_updated")
+        assertTrue(body.contains("last_successful_refresh: String"), "SDL should contain last_successful_refresh")
+    }
+
+    @Test
     fun testGraphiQLRoute() = testApplication {
         application {
             module()
