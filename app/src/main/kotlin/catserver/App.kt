@@ -16,7 +16,6 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.timestamp
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -42,8 +41,8 @@ class FeedMetaQuery : Query {
 object FeedMetaTable : Table("feed_meta") {
     val feedKey = varchar("feed_key", 255)
     val feedUrl = varchar("feed_url", 1024)
-    val lastUpdated = timestamp("last_updated").nullable()
-    val lastSuccessfulRefresh = timestamp("last_successful_refresh").nullable()
+    val lastUpdated = long("last_updated").nullable()
+    val lastSuccessfulRefresh = long("last_successful_refresh").nullable()
 
     override val primaryKey = PrimaryKey(feedKey)
 }
