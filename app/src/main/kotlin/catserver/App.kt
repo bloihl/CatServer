@@ -20,6 +20,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.Date
 
+import catserver.RoutesQuery
+
 class HelloQuery : Query {
     fun hello(): String = "Hello World!"
 }
@@ -85,7 +87,11 @@ fun Application.module() {
             packages = listOf("catserver")
             queries = listOf(
                 HelloQuery(),
-                FeedMetaQuery()
+                FeedMetaQuery(),
+                RoutesQuery(),
+                RouteQuery(),
+                StopsQuery(),
+                StopQuery(),
             )
         }
     }
