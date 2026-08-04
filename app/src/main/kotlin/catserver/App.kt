@@ -18,6 +18,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.Date
 
 class HelloQuery : Query {
     fun hello(): String = "Hello World!"
@@ -30,8 +31,8 @@ class FeedMetaQuery : Query {
                 FeedMeta(
                     feed_key = row[FeedMetaTable.feedKey],
                     feed_url = row[FeedMetaTable.feedUrl],
-                    last_updated = row[FeedMetaTable.lastUpdated]?.toString(),
-                    last_successful_refresh = row[FeedMetaTable.lastSuccessfulRefresh]?.toString()
+                    last_updated = Date(row[FeedMetaTable.lastUpdated]).toString(),
+                    last_successful_refresh = Date(row[FeedMetaTable.lastSuccessfulRefresh]).toString()
                 )
             }
         }
@@ -41,8 +42,8 @@ class FeedMetaQuery : Query {
 object FeedMetaTable : Table("feed_meta") {
     val feedKey = varchar("feed_key", 255)
     val feedUrl = varchar("feed_url", 1024)
-    val lastUpdated = long("last_updated").nullable()
-    val lastSuccessfulRefresh = long("last_successful_refresh").nullable()
+    val lastUpdated = long("last_updated")
+    val lastSuccessfulRefresh = long("last_successful_refresh")
 
     override val primaryKey = PrimaryKey(feedKey)
 }
