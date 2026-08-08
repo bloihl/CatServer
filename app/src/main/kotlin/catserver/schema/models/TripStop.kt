@@ -1,8 +1,12 @@
 package catserver.schema.models
 
 import catserver.db.tables.StopTimesTable
+import catserver.schema.dataloaders.StopDataLoader
+import com.expediagroup.graphql.server.extensions.getValueFromDataLoader
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.concurrent.CompletableFuture
 
 data class TripStop(
     val tripId: String,
@@ -12,6 +16,10 @@ data class TripStop(
     val stopSequence: Int,
     val stopHeadsign: String?
 ){
+    fun stop(dfe: DataFetchingEnvironment): CompletableFuture<List<Stop>>  =
+        dfe.getValueFromDataLoader(StopDataLoader.dataLoaderName, stopId)
+
+
     companion object {
         fun stopsFor(tripIds: List<String>): List<List<TripStop>>{
             val stopTimesByTrip = transaction {

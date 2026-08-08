@@ -36,5 +36,23 @@ data class Stop(
                 }
             }
         }
+
+        fun getStops(stopIds: List<String>): List<List<Stop>> {
+            val stops = transaction {
+                StopsTable.selectAll()
+                    .where { StopsTable.stopId inList stopIds }
+                    .map { row ->
+                        Stop(
+                            stopId = row[StopsTable.stopId],
+                            stopName = row[StopsTable.stopName],
+                            stopDesc = row[StopsTable.stopDesc]
+                        )
+                    }
+                    .groupBy { it.stopId }
+            }
+            return stopIds.map { stopId ->
+                stops[stopId] ?: emptyList()
+            }
+        }
     }
 }
