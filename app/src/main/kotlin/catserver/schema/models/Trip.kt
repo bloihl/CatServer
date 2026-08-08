@@ -1,8 +1,12 @@
 package catserver.schema.models
 
 import catserver.db.tables.TripsTable
+import catserver.schema.dataloaders.TripStopDataLoader
+import com.expediagroup.graphql.server.extensions.getValueFromDataLoader
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.concurrent.CompletableFuture
 
 data class Trip(
     val routeId: String,
@@ -12,6 +16,9 @@ data class Trip(
     val tripServiceId: String?,
     val tripHeadSign: String?
 ){
+    fun tripStops(dfe: DataFetchingEnvironment): CompletableFuture<List<TripStop>>  =
+        dfe.getValueFromDataLoader(TripStopDataLoader.dataLoaderName, tripId)
+
     companion object {
         fun allTrips(routeIds: List<String>): List<List<Trip>> {
             val tripsByRouteId = transaction {

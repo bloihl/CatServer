@@ -6,6 +6,7 @@ import catserver.schema.StopQuery
 import catserver.schema.StopsQuery
 import catserver.schema.FeedMetaQuery
 import catserver.schema.dataloaders.TripDataLoader
+import catserver.schema.dataloaders.TripStopDataLoader
 import com.expediagroup.graphql.dataloader.KotlinDataLoaderRegistryFactory
 import com.expediagroup.graphql.server.ktor.*
 import com.expediagroup.graphql.server.operations.Query
@@ -62,7 +63,7 @@ fun Application.module() {
 
         engine {
             dataLoaderRegistryFactory = KotlinDataLoaderRegistryFactory(
-                listOf(TripDataLoader)
+                listOf(TripDataLoader, TripStopDataLoader)
             )
         }
     }

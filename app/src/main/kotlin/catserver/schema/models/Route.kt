@@ -14,10 +14,9 @@ class Route(
     val routeLongName: String,
     val routeDesc: String?
 ) {
-    fun trips(dfe: DataFetchingEnvironment): CompletableFuture<List<Trip>> {
-        return dfe.getValueFromDataLoader(TripDataLoader.dataLoaderName, routeId)
-//        CompletableFuture.completedFuture(emptyList<Trip>())
-    }
+    fun trips(dfe: DataFetchingEnvironment): CompletableFuture<List<Trip>>  =
+         dfe.getValueFromDataLoader(TripDataLoader.dataLoaderName, routeId)
+
 
     companion object {
         fun allRoutes(): List<Route>
