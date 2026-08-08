@@ -2,15 +2,11 @@ package catserver.schema.models
 
 import catserver.db.tables.StopTimesTable
 import catserver.db.tables.StopsTable
-import catserver.schema.dataloaders.StopDataLoader
-import com.expediagroup.graphql.server.extensions.getValueFromDataLoader
-import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.concurrent.CompletableFuture
 
-data class TripStop(
+data class RouteTripStop(
     val tripId: String,
     val arrivalTime: String,
     val departureTime: String,
@@ -21,14 +17,14 @@ data class TripStop(
     val stopDesc: String?
 ){
     companion object {
-        fun stopsFor(tripIds: List<String>): List<List<TripStop>>{
+        fun stopsFor(tripIds: List<String>): List<List<RouteTripStop>>{
             val stopTimesByTrip = transaction {
                 StopTimesTable.join(StopsTable, JoinType.INNER, additionalConstraint = { StopTimesTable.stopId eq StopsTable.stopId })
                     .selectAll()
                     .where{ StopTimesTable.tripId inList tripIds }
                     .orderBy(StopTimesTable.stopSequence)
                     .map { row ->
-                        TripStop(
+                        RouteTripStop(
                             tripId = row[StopTimesTable.tripId],
                             arrivalTime = row[StopTimesTable.arrivalTime],
                             departureTime = row[StopTimesTable.departureTime],

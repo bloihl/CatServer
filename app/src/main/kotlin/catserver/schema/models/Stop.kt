@@ -1,14 +1,22 @@
 package catserver.schema.models
 
 import catserver.db.tables.StopsTable
+import catserver.schema.dataloaders.StopRouteDataLoader
+import com.expediagroup.graphql.server.extensions.getValueFromDataLoader
+import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.concurrent.CompletableFuture
 
 data class Stop(
     val stopId: String,
     val stopName: String?,
     val stopDesc: String?
 ){
+
+    fun trips(dfe: DataFetchingEnvironment): CompletableFuture<List<StopRoute>>  =
+        dfe.getValueFromDataLoader(StopRouteDataLoader.dataLoaderName, stopId)
+
     companion object{
         fun allStops(): List<Stop> {
             return transaction {

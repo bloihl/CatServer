@@ -1,7 +1,7 @@
 package catserver.schema.models
 
 import catserver.db.tables.RoutesTable
-import catserver.schema.dataloaders.TripDataLoader
+import catserver.schema.dataloaders.RouteTripDataLoader
 import com.expediagroup.graphql.server.extensions.getValueFromDataLoader
 import graphql.schema.DataFetchingEnvironment
 import org.jetbrains.exposed.sql.selectAll
@@ -14,8 +14,8 @@ class Route(
     val routeLongName: String,
     val routeDesc: String?
 ) {
-    fun trips(dfe: DataFetchingEnvironment): CompletableFuture<List<Trip>>  =
-         dfe.getValueFromDataLoader(TripDataLoader.dataLoaderName, routeId)
+    fun trips(dfe: DataFetchingEnvironment): CompletableFuture<List<RouteTrip>>  =
+         dfe.getValueFromDataLoader(RouteTripDataLoader.dataLoaderName, routeId)
 
 
     companion object {
