@@ -1,13 +1,8 @@
 package catserver
 
-import catserver.schema.RouteQuery
-import catserver.schema.RoutesQuery
-import catserver.schema.StopQuery
-import catserver.schema.StopsQuery
-import catserver.schema.FeedMetaQuery
-import catserver.schema.dataloaders.StopRouteDataLoader
+import catserver.schema.*
 import catserver.schema.dataloaders.RouteTripDataLoader
-import catserver.schema.dataloaders.RouteTripStopDataLoader
+import catserver.schema.dataloaders.StopRouteDataLoader
 import com.expediagroup.graphql.dataloader.KotlinDataLoaderRegistryFactory
 import com.expediagroup.graphql.server.ktor.*
 import com.expediagroup.graphql.server.operations.Query
@@ -64,7 +59,7 @@ fun Application.module() {
 
         engine {
             dataLoaderRegistryFactory = KotlinDataLoaderRegistryFactory(
-                listOf(RouteTripDataLoader, RouteTripStopDataLoader, StopRouteDataLoader)
+                listOf(RouteTripDataLoader, StopRouteDataLoader)
             )
         }
     }
